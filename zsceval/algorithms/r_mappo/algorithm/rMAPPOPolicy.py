@@ -161,7 +161,7 @@ class R_MAPPOPolicy:
         available_actions=None,
         active_masks=None,
     ):
-        action_log_probs, _, _, rnn_states_actor = self.actor.get_similarity_score(
+        similarity = self.actor.get_similarity_score(
             obs, rnn_states_actor, action, masks, available_actions, active_masks
         )
         return action_log_probs, rnn_states_actor
