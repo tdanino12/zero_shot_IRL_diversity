@@ -164,7 +164,7 @@ class R_MAPPOPolicy:
         similarity = self.actor.get_similarity_score(
             obs, rnn_states_actor, action, masks, available_actions, active_masks
         )
-        return action_log_probs, rnn_states_actor
+        return similarity
     
     def load_checkpoint(self, ckpt_path):
         if "actor" in ckpt_path:
