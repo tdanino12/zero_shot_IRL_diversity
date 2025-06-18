@@ -293,7 +293,7 @@ class R_Actor(nn.Module):
 
         return action_log_probs, dist_entropy, values, rnn_states
 
-    def get_similarity_score(self, obs, rnn_states, action, masks, available_actions=None, active_masks=None):
+    def get_similarity_score(self, obs, rnn_states, action, masks, available_actions=None, active_masks=None, detach = True):
         if self._mixed_obs:
             for key in obs.keys():
                 obs[key] = check(obs[key]).to(**self.tpdv)
@@ -321,8 +321,9 @@ class R_Actor(nn.Module):
             actor_features = self.mlp_after(actor_features)
             
         temporal_credits = torch.autograd.grad(actor_features.sum(), middle, create_graph=True, retain_graph=True)[0]
-        temporal_credits = temporal_credits.detach()
-        middle = middle.detach()
+        if(detach):
+            temporal_credits = temporal_credits.detach()
+            middle = middle.detach()
         temporal_credits = temporal_credits*middle
 
         return temporal_credits
