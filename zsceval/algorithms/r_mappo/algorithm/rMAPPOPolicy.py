@@ -152,6 +152,20 @@ class R_MAPPOPolicy:
         )
         return action_log_probs, rnn_states_actor
 
+    def get_similarity_no_grad(
+        self,
+        obs,
+        rnn_states_actor,
+        action,
+        masks,
+        available_actions=None,
+        active_masks=None,
+    ):
+        action_log_probs, _, _, rnn_states_actor = self.actor.get_action_log_probs(
+            obs, rnn_states_actor, action, masks, available_actions, active_masks
+        )
+        return action_log_probs, rnn_states_actor
+    
     def load_checkpoint(self, ckpt_path):
         if "actor" in ckpt_path:
             self.actor.load_state_dict(torch.load(ckpt_path["actor"], map_location=self.device))
