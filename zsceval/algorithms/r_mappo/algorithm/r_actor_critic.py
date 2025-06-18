@@ -321,6 +321,8 @@ class R_Actor(nn.Module):
             actor_features = self.mlp_after(actor_features)
             
         temporal_credits = torch.autograd.grad(actor_features.sum(), middle, create_graph=True, retain_graph=True)[0]
+        temporal_credits = temporal_credits.detach()
+        middle = middle.detach()
         temporal_credits = temporal_credits*middle
         action_log_probs, dist_entropy = self.act.evaluate_actions(
             actor_features,
