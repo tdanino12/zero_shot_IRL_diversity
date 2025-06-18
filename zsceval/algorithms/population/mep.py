@@ -203,6 +203,7 @@ class MEP_Trainer(TrainerPool):
                                     actions_mlp[l:r],
                                     masks_mlp[l:r],
                                     available_actions_mlp[l:r] if available_actions_mlp is not None else None,
+                                    detach = True
                                 )
                                 #action_probs[l:r] = _t2n(t_action_log_probs.exp())
                                 similarity = similarity.sum(dim=(1, 2, 3), keepdim=True)
