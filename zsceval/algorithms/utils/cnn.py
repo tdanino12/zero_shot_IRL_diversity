@@ -210,6 +210,12 @@ class CNNBase(nn.Module):
         cnn_x = self.cnn2(cnn_x)
         return cnn_x
 
+    def forward_customized(self, x):
+        cnn_input = self._build_cnn_input(x, self.cnn_keys)
+        cnn_x = self.cnn(cnn_input)
+        cnn_x2 = self.cnn2(cnn_x)
+        return cnn_x2, cnn_x
+    
     @property
     def output_size(self):
         return self.hidden_size
