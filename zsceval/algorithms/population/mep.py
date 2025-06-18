@@ -205,15 +205,19 @@ class MEP_Trainer(TrainerPool):
                                     available_actions_mlp[l:r] if available_actions_mlp is not None else None,
                                 )
                                 #action_probs[l:r] = _t2n(t_action_log_probs.exp())
+                                similarity = similarity.sum(dim=(1, 2, 3), keepdim=True)
+                                similarity = similarity.squeeze().unsqueeze(1) 
+                                action_probs[l:r] = _t2n(similarity)
 
-                            #action_probs = action_probs.reshape(buffer.episode_length, num_traj, 1)
+                            action_probs = action_probs.reshape(buffer.episode_length, num_traj, 1)
                             #population_action_probs += action_probs
                 #population_action_probs /= len(self.population)
 
                 #nlog_pop_act_prob[active_trainer_name] = -np.log(np.maximum(population_action_probs, 1e-5)).reshape(
                 #    buffer.episode_length, num_traj, 1, 1
                 #)
-
+                nlog_pop_act_prob[active_trainer_name] = population_action_probs 
+                nlog_pop_act_prob[active_trainer_name] = nlog_pop_act_prob[active_trainer_name].reshape(buffer.rewards[: buffer.episode_length].shape)
                 buffer.rewards[: buffer.episode_length] += nlog_pop_act_prob[active_trainer_name] * self.entropy_alpha
 
         super().train()
