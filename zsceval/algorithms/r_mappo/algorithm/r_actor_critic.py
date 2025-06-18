@@ -310,7 +310,7 @@ class R_Actor(nn.Module):
         if active_masks is not None:
             active_masks = check(active_masks).to(**self.tpdv)
 
-        actor_features = self.base(obs)
+        actor_features, middle = self.base.forward_customized(obs)
 
         if self._use_naive_recurrent_policy or self._use_recurrent_policy:
             actor_features, rnn_states = self.rnn(actor_features, rnn_states, masks)
@@ -319,7 +319,9 @@ class R_Actor(nn.Module):
             actor_features = torch.cat([actor_features, mlp_obs], dim=1)
         if self._layer_after_N > 0:
             actor_features = self.mlp_after(actor_features)
-
+            
+        temporal_credits = torch.autograd.grad(actor_features.sum(), middle, create_graph=True, retain_graph=True)[0]
+        temporal_credits = temporal_credits*middle
         action_log_probs, dist_entropy = self.act.evaluate_actions(
             actor_features,
             action,
