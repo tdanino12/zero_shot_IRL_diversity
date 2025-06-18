@@ -160,9 +160,10 @@ class R_MAPPOPolicy:
         masks,
         available_actions=None,
         active_masks=None,
+        detach = True
     ):
         similarity = self.actor.get_similarity_score(
-            obs, rnn_states_actor, action, masks, available_actions, active_masks
+            obs, rnn_states_actor, action, masks, available_actions, active_masks,detach
         )
         return similarity
     
