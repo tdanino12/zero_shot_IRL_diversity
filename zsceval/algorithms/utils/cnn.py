@@ -20,7 +20,7 @@ class CNNBase(nn.Module):
         self.hidden_size = args.hidden_size
         self.cnn_keys = ["rgb"]
 
-        self.cnn = self._build_cnn_model(
+        self.cnn, self.cnn2 = self._build_cnn_model(
             obs_shape,
             self.cnn_keys,
             cnn_layers_params,
@@ -120,9 +120,9 @@ class CNNBase(nn.Module):
                 kernel_size=np.array([kernel_size, kernel_size], dtype=np.float32),
                 stride=np.array([stride, stride], dtype=np.float32),
             )
-
+        cnn_layers2 = []
         if (cnn_layers_params[-1][0] * cnn_dims[0] * cnn_dims[1]) > 20000:
-            cnn_layers += [
+            cnn_layers2 = [
                 Flatten(),
                 init_(nn.Linear(cnn_layers_params[-1][0] * cnn_dims[0] * cnn_dims[1], 2048)),
                 active_func,
@@ -132,7 +132,7 @@ class CNNBase(nn.Module):
                 nn.LayerNorm(hidden_size),
             ]
         else:
-            cnn_layers += [
+            cnn_layers2 = [
                 Flatten(),
                 init_(
                     nn.Linear(
@@ -149,7 +149,7 @@ class CNNBase(nn.Module):
                 active_func,
                 nn.LayerNorm(hidden_size),
             ]
-        return nn.Sequential(*cnn_layers)
+        return nn.Sequential(*cnn_layers), nn.Sequential(*cnn_layers2)
 
     def _cnn_output_dim(self, dimension, padding, dilation, kernel_size, stride):
         """Calculates the output height and width based on the input
@@ -207,6 +207,7 @@ class CNNBase(nn.Module):
     def forward(self, x):
         cnn_input = self._build_cnn_input(x, self.cnn_keys)
         cnn_x = self.cnn(cnn_input)
+        cnn_x = self.cnn2(cnn_x)
         return cnn_x
 
     @property
