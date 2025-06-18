@@ -324,16 +324,8 @@ class R_Actor(nn.Module):
         temporal_credits = temporal_credits.detach()
         middle = middle.detach()
         temporal_credits = temporal_credits*middle
-        action_log_probs, dist_entropy = self.act.evaluate_actions(
-            actor_features,
-            action,
-            available_actions,
-            active_masks=active_masks if self._use_policy_active_masks else None,
-        )
 
-        values = self.v_out(actor_features) if self._use_policy_vhead else None
-
-        return action_log_probs, dist_entropy, values, rnn_states
+        return temporal_credits
 
 
 class R_Critic(nn.Module):
