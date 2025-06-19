@@ -205,21 +205,37 @@ class MEP_Trainer(TrainerPool):
                                     available_actions_mlp[l:r] if available_actions_mlp is not None else None,
                                     detach = True
                                 )
-                                #action_probs[l:r] = _t2n(t_action_log_probs.exp())
-                                similarity = similarity.sum(dim=(1, 2, 3), keepdim=True)
-                                similarity = similarity.squeeze().unsqueeze(1) 
-                                action_probs[l:r] = _t2n(similarity)
-
+                                t_action_log_probs = t_action_log_probs.sum(dim=(1, 2, 3), keepdim=True)
+                                t_action_log_probs = t_action_log_probs.squeeze().unsqueeze(1) 
+                                action_probs[l:r] = _t2n(t_action_log_probs)
+                                
                             action_probs = action_probs.reshape(buffer.episode_length, num_traj, 1)
-                            #population_action_probs += action_probs
-                #population_action_probs /= len(self.population)
-
-                #nlog_pop_act_prob[active_trainer_name] = -np.log(np.maximum(population_action_probs, 1e-5)).reshape(
-                #    buffer.episode_length, num_traj, 1, 1
-                #)
-                nlog_pop_act_prob[active_trainer_name] = population_action_probs 
+                            population_action_probs += action_probs
+                            
+                    for l in range(0, buffer.episode_length * num_traj, mini_batch_size):
+                        r = min(
+                            buffer.episode_length * num_traj,
+                            l + mini_batch_size,
+                        )               
+                        (t_action_log_probs_positive) = self.population[active_trainer_name].policy.get_similarity_no_grad(
+                                                      obs_mlp[l:r],
+                                                      rnn_states_mlp[l:r],
+                                                      actions_mlp[l:r],
+                                                      masks_mlp[l:r],
+                                                      available_actions_mlp[l:r] if available_actions_mlp is not None else None,
+                                                      detach = False
+                        )
+                        t_action_log_probs_positive = t_action_log_probs_positive.sum(dim=(1, 2, 3), keepdim=True)
+                        t_action_log_probs_positive = t_action_log_probs_positive.squeeze().unsqueeze(1) 
+                t_action_log_probs_positive = t_action_log_probs_positive.reshape(population_action_probs.shape)        
+                nlog_pop_act_prob[active_trainer_name] = -np.log(t_action_log_probs_positive/np.maximum(population_action_probs, 1e-5))
+                nlog_pop_act_prob[active_trainer_name] [~torch.isfinite(nlog_pop_act_prob[active_trainer_name] )] = 0
                 nlog_pop_act_prob[active_trainer_name] = nlog_pop_act_prob[active_trainer_name].reshape(buffer.rewards[: buffer.episode_length].shape)
-                buffer.rewards[: buffer.episode_length] += nlog_pop_act_prob[active_trainer_name] * self.entropy_alpha
+                vec = nlog_pop_act_prob[active_trainer_name]
+                percentage_zeros = (vec == 0).sum().item() / vec.numel() * 100
+                print(f"{percentage_zeros:.2f}% zeros")
+                buffer.rewards[: buffer.episode_length] += np.asarray(nlog_pop_act_prob[active_trainer_name]) * 0.001
+
 
         super().train()
 
@@ -229,11 +245,11 @@ class MEP_Trainer(TrainerPool):
 
             for active_trainer_name in self.active_trainers:
                 buffer = self.buffer_pool[active_trainer_name]
-                buffer.rewards[: buffer.episode_length] -= nlog_pop_act_prob[active_trainer_name] * self.entropy_alpha
+                buffer.rewards[: buffer.episode_length] -= np.asarray(nlog_pop_act_prob[active_trainer_name]) * self.entropy_alpha
                 self.train_infos.update(
                     {
                         f"{active_trainer_name}-average_nlog_pop_act_prob": np.mean(
-                            nlog_pop_act_prob[active_trainer_name]
+                            np.asarray(nlog_pop_act_prob[active_trainer_name])
                         )
                     }
                 )
