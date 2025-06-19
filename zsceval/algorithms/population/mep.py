@@ -245,7 +245,7 @@ class MEP_Trainer(TrainerPool):
 
             for active_trainer_name in self.active_trainers:
                 buffer = self.buffer_pool[active_trainer_name]
-                buffer.rewards[: buffer.episode_length] -= np.asarray(nlog_pop_act_prob[active_trainer_name]) * self.entropy_alpha
+                buffer.rewards[: buffer.episode_length] -= np.asarray(nlog_pop_act_prob[active_trainer_name]) * 0.001
                 self.train_infos.update(
                     {
                         f"{active_trainer_name}-average_nlog_pop_act_prob": np.mean(
