@@ -204,7 +204,7 @@ class R_MAPPO:
             policy_loss = policy_action_loss + policy_value_loss * self.policy_value_loss_coef
         else:
             policy_loss = policy_action_loss
-        policy_loss += 0.01*d_loss
+        policy_loss += 0.01*d_loss.sum()
         if actor_zero_grad:
             # logger.debug("actor zero grad")
             self.policy.actor_optimizer.zero_grad()
