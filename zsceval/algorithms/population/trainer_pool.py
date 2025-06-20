@@ -321,7 +321,7 @@ class TrainerPool:
         for trainer_name in self.active_trainers:
             self.trainer_pool[trainer_name].adapt_entropy_coef(num_steps)
 
-    def train(self, **kwargs):
+    def train(self, **kwargs, d_loss = None):
         assert self.__initialized
         for trainer_name in self.active_trainers:
             trainer = self.trainer_pool[trainer_name]
@@ -348,6 +348,7 @@ class TrainerPool:
                     turn_on=(self.trainer_total_num_steps[trainer_name] >= self.all_args.critic_warmup_horizon),
                     actor_zero_grad=kwargs.get("actor_zero_grad", True),
                     critic_zero_grad=kwargs.get("critic_zero_grad", True),
+                    d_loss[trainer_name],
                 )
                 self.train_infos.update({f"{trainer_name}-{k}": v for k, v in train_info.items()})
                 self.train_infos.update(
