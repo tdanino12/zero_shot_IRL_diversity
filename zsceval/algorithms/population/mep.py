@@ -195,8 +195,7 @@ class MEP_Trainer(TrainerPool):
                                 )
                                 '''
                                 (
-                                    similarity,
-                                    _,
+                                    similarity
                                 ) = trainer.policy.get_similarity_no_grad(
                                     obs_mlp[l:r],
                                     rnn_states_mlp[l:r],
