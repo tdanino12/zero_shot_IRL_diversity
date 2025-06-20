@@ -328,7 +328,7 @@ class R_Actor(nn.Module):
         #    middle = middle.detach()
         temporal_credits = temporal_credits*middle
 
-        return temporal_credits
+        return temporal_credits, rnn_states
 
 
 class R_Critic(nn.Module):
