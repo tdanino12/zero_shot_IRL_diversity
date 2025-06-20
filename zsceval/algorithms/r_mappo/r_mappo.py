@@ -121,6 +121,7 @@ class R_MAPPO:
         turn_on: bool = True,
         actor_zero_grad: bool = True,
         critic_zero_grad: bool = True,
+        d_loss = None,
     ):
         if self.share_policy:
             (
@@ -203,7 +204,7 @@ class R_MAPPO:
             policy_loss = policy_action_loss + policy_value_loss * self.policy_value_loss_coef
         else:
             policy_loss = policy_action_loss
-
+        policy_loss += 0.01*d_loss
         if actor_zero_grad:
             # logger.debug("actor zero grad")
             self.policy.actor_optimizer.zero_grad()
@@ -272,7 +273,7 @@ class R_MAPPO:
             advantages = buffer.returns[:-1] - buffer.value_preds[:-1]
         return advantages
 
-    def train(self, buffer, turn_on=True, **kwargs):
+    def train(self, buffer, turn_on=True, **kwargs, d_loss = None):
         if self._use_popart or self._use_valuenorm:
             advantages = buffer.returns[:-1] - self.value_normalizer.denormalize(buffer.value_preds[:-1])
         else:
@@ -314,7 +315,7 @@ class R_MAPPO:
                     upper_rate,
                     lower_rate,
                     entropy_coef,
-                ) = self.ppo_update(sample, turn_on, **kwargs)
+                ) = self.ppo_update(sample, turn_on, **kwargs, d_loss = d_loss)
 
                 train_info["value_loss"] += value_loss.item()
                 train_info["policy_loss"] += policy_loss.item()
