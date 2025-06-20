@@ -321,7 +321,7 @@ class TrainerPool:
         for trainer_name in self.active_trainers:
             self.trainer_pool[trainer_name].adapt_entropy_coef(num_steps)
 
-    def train(self, **kwargs, d_loss = None):
+    def train(self,  d_loss = None, **kwargs):
         assert self.__initialized
         for trainer_name in self.active_trainers:
             trainer = self.trainer_pool[trainer_name]
