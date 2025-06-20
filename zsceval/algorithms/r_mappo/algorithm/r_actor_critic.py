@@ -321,9 +321,11 @@ class R_Actor(nn.Module):
             actor_features = self.mlp_after(actor_features)
             
         temporal_credits = torch.autograd.grad(actor_features.sum(), middle, create_graph=True, retain_graph=True)[0]
-        if(detach):
-            temporal_credits = temporal_credits.detach()
-            middle = middle.detach()
+        temporal_credits = temporal_credits.detach()
+        middle = middle.detach()
+        #if(detach):
+        #    temporal_credits = temporal_credits.detach()
+        #    middle = middle.detach()
         temporal_credits = temporal_credits*middle
 
         return temporal_credits
