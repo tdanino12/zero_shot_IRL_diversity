@@ -273,7 +273,7 @@ class R_MAPPO:
             advantages = buffer.returns[:-1] - buffer.value_preds[:-1]
         return advantages
 
-    def train(self, buffer, turn_on=True, **kwargs, d_loss = None):
+    def train(self, buffer, turn_on=True, d_loss = None, **kwargs):
         if self._use_popart or self._use_valuenorm:
             advantages = buffer.returns[:-1] - self.value_normalizer.denormalize(buffer.value_preds[:-1])
         else:
