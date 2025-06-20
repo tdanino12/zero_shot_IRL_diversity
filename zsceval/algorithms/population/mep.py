@@ -204,9 +204,9 @@ class MEP_Trainer(TrainerPool):
                                     available_actions_mlp[l:r] if available_actions_mlp is not None else None,
                                     detach = True
                                 )
-                                t_action_log_probs = t_action_log_probs.sum(dim=(1, 2, 3), keepdim=True)
-                                t_action_log_probs = t_action_log_probs.squeeze().unsqueeze(1) 
-                                action_probs[l:r] = _t2n(t_action_log_probs)
+                                similarity = similarity.sum(dim=(1, 2, 3), keepdim=True)
+                                similarity = similarity.squeeze().unsqueeze(1) 
+                                action_probs[l:r] = _t2n(similarity)
                                 
                             action_probs = action_probs.reshape(buffer.episode_length, num_traj, 1)
                             population_action_probs += action_probs
