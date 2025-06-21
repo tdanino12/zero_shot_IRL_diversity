@@ -213,11 +213,14 @@ def main(args):
     else:
         project_name = all_args.env_name
     # wandb
+    os.environ["WANDB_API_KEY"] = "495b87eba3dbc88f719508680483181c811852ba"
+    os.environ["WANDB_MODE"] = "online"
+    wandb.login(key = os.environ["WANDB_API_KEY"])    # Default/Base scheme
     if all_args.use_wandb:
         run = wandb.init(
             config=all_args,
             project=project_name,
-            entity=all_args.wandb_name,
+            #entity=all_args.wandb_name,
             notes=socket.gethostname(),
             name=str(all_args.algorithm_name) + "_" + str(all_args.experiment_name) + "_seed" + str(all_args.seed),
             group=all_args.layout_name,
