@@ -22,7 +22,7 @@ num_env_steps="1e7"
 num_agents=2
 algo="mep"
 stage="S1"
-exp="mep-${stage}-s${population_size}"
+exp="mep-${stage}-s${population_size}-diversity"
 seed=1
 
 train_batch=125
