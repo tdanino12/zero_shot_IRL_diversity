@@ -282,8 +282,12 @@ def main(args):
     # print("population_yaml_path: ", all_args.population_yaml_path)
     logger.info("population_yaml_path: ", all_args.population_yaml_path)
 
+    path = Path(all_args.population_yaml_path)
+    p1 = path.name
+    p2 = f"/home/tom.danino/scevel/ZSC-Eval/zsceval/policy_pool/random0/mep/s2/{p1}"
+    
     #  override policy config
-    population_config = yaml.load(open(all_args.population_yaml_path), yaml.Loader)
+    population_config = yaml.load(open(p2), yaml.Loader)
     logger.info(f"population_config: {pformat(population_config)}")
 
     override_policy_config = {}
@@ -318,7 +322,7 @@ def main(args):
             )  # only override share_obs_space
 
     runner.policy.load_population(
-        all_args.population_yaml_path,
+        p2,
         evaluation=False,
         override_policy_config=override_policy_config,
     )
