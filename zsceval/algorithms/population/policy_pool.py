@@ -142,6 +142,8 @@ class PolicyPool:
                     else:
                         path_prefix = ACTOR_POOL_PATH
                     model_path = add_path_prefix(path_prefix, population_config[policy_name]["model_path"])
+                    if model_path['actor'].startswith('../../'):
+                        model_path['actor'] = model_path['actor'].replace('../../', '/home/tom.danino/scevel/ZSC-Eval/zsceval/', 1)
                     policy.load_checkpoint(model_path)
                 policy_train = False
                 if not evaluation and "train" in population_config[policy_name].keys():
