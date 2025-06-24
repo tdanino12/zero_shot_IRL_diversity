@@ -343,13 +343,22 @@ class TrainerPool:
 
                 # train
                 trainer.prep_training()
-                train_info = trainer.train(
-                    buffer,
-                    turn_on=(self.trainer_total_num_steps[trainer_name] >= self.all_args.critic_warmup_horizon),
-                    actor_zero_grad=kwargs.get("actor_zero_grad", True),
-                    critic_zero_grad=kwargs.get("critic_zero_grad", True),
-                    d_loss = d_loss[trainer_name],
-                )
+                if(trainer_name in d_loss):
+                    train_info = trainer.train(
+                        buffer,
+                        turn_on=(self.trainer_total_num_steps[trainer_name] >= self.all_args.critic_warmup_horizon),
+                        actor_zero_grad=kwargs.get("actor_zero_grad", True),
+                        critic_zero_grad=kwargs.get("critic_zero_grad", True),
+                        d_loss = d_loss[trainer_name],
+                    )
+                else:
+                    train_info = trainer.train(
+                        buffer,
+                        turn_on=(self.trainer_total_num_steps[trainer_name] >= self.all_args.critic_warmup_horizon),
+                        actor_zero_grad=kwargs.get("actor_zero_grad", True),
+                        critic_zero_grad=kwargs.get("critic_zero_grad", True),
+                        d_loss = None,
+                    )
                 self.train_infos.update({f"{trainer_name}-{k}": v for k, v in train_info.items()})
                 self.train_infos.update(
                     {f"{trainer_name}-average_episode_rewards": np.mean(buffer.rewards) * buffer.episode_length}
