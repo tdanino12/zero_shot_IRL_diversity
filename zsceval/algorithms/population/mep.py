@@ -276,7 +276,7 @@ class MEP_Trainer(TrainerPool):
                 #buffer.rewards[: buffer.episode_length] += nlog_pop_act_prob[active_trainer_name] * 0.001
 
         if self.stage != 2:
-             nlog_pop_act_prob=None
+             nlog_pop_act_prob=[]
 
         super().train(d_loss = nlog_pop_act_prob)
 
