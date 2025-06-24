@@ -275,6 +275,8 @@ class MEP_Trainer(TrainerPool):
                 print(f"{percentage_zeros:.2f}% zeros")
                 #buffer.rewards[: buffer.episode_length] += nlog_pop_act_prob[active_trainer_name] * 0.001
 
+        if self.stage != 2:
+             nlog_pop_act_prob=None
 
         super().train(d_loss = nlog_pop_act_prob)
 
