@@ -190,6 +190,11 @@ def main(args):
     all_args.run_dir = run_dir
 
     # wandb
+    os.environ["WANDB_API_KEY"] = "495b87eba3dbc88f719508680483181c811852ba"
+    os.environ["WANDB_MODE"] = "online"
+    wandb.login(key = os.environ["WANDB_API_KEY"])    # Default/Base scheme
+    
+    # wandb
     if all_args.overcooked_version == "new":
         project_name = all_args.env_name + "-new"
     else:
