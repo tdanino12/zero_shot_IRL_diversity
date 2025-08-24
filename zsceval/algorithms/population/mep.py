@@ -154,7 +154,9 @@ class MEP_Trainer(TrainerPool):
                         )
                     else:
                         available_actions_mlp = None
-
+                with torch.no_grad():
+                    for active_trainer_name in self.active_trainers:
+                        
                 for i in range(1): #with torch.no_grad():
                     for trainer_name, trainer in self.population.items():
                         if (
