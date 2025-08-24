@@ -1,0 +1,2 @@
+1. use this command, leave the file in its original loc
+bash shell/train_bias_agents.sh {layout}
