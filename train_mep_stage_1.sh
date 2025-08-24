@@ -1,6 +1,6 @@
 #!/bin/bash
 env="Overcooked"
-
+# location of the file in server is: ~/scevel/ZSC-Eval/zsceval/scripts/overcooked
 layout=$1
 population_size=$2
 
