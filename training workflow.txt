@@ -1,2 +1,9 @@
 1. use this command, leave the file in its original loc
 bash shell/train_bias_agents.sh {layout}
+
+2. copy:
+extract_pop_S1_models.py
+to
+~/scevel/ZSC-Eval/zsceval/scripts/
+and run:
+python extract_pop_S1_models.py random0 overcooked
