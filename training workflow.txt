@@ -1,9 +1,21 @@
-1. use this command, leave the file in its original loc
+
+################# Train evaluaiton partners:#######################
+1. run this command, leave the file in its original location:
 bash shell/train_bias_agents.sh {layout}
+
+
+################# Train MEP:#######################
+1. train population for the ego agent:
+copy:
+"train_mep_stage_1.sh"  from "/home/tom.danino/zsceval/scripts/overcooked
+/shell/" to "/home/tom.danino/scevel/ZSC-Eval/zsceval/scripts/overcooked/"
+run:
+bash /home/tom.danino/scevel/ZSC-Eval/zsceval/scripts/overcooked/train_mep_stage_1.sh random0 4
 
 2. copy:
 extract_pop_S1_models.py
 to
-~/scevel/ZSC-Eval/zsceval/scripts/
+"/home/tom.danino//scevel/ZSC-Eval/zsceval/scripts/"
 and run:
 python extract_pop_S1_models.py random0 overcooked
+
