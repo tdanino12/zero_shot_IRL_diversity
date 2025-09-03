@@ -1,9 +1,13 @@
 
 ################# Train evaluaiton partners:#######################
-1. run this command, leave the file in its original location:
+1. Run this command, leave the file in its original location:
 bash shell/train_bias_agents.sh {layout}
 
+2. Run this command, leave the file in its original location:
+python3 ~/scevel/ZSC-Eval/zsceval/scripts/extract_models/extract_bias_agents_models.py random0 overcooked
 
+3. Run this command, leave the file in its original location:
+python3 ~/scevel/ZSC-Eval/zsceval/scripts/prep/gen_bias_agent_eval_yml.py random0
 ################# Train MEP:#######################
 1. train population for the ego agent:
 copy:
@@ -18,5 +22,6 @@ to
 "/home/tom.danino/scevel/ZSC-Eval/zsceval/scripts/"
 and run:
 python extract_pop_S1_models.py random0 overcooked
+
 
 
