@@ -9,7 +9,11 @@ python3 ~/scevel/ZSC-Eval/zsceval/scripts/extract_models/extract_bias_agents_mod
 3. Run this command, leave the file in its original location:
 python3 ~/scevel/ZSC-Eval/zsceval/scripts/prep/gen_bias_agent_eval_yml.py random0
 
-4. Run this command, leave the file in its original location:
+4.Run this command, leave the file in its original location:
+bash ~/Desktop/zseval/ZSC-Eval/zsceval/scripts/overcooked/shell/eval_bias_agents_events.sh
+(Note: the policy config folder is not created by itself, you need to copy it manually from the main repository)
+
+5. Run this command, leave the file in its original location:
 python3 ~/scevel/ZSC-Eval/zsceval/scripts/prep/select_bias_agent_br.py --env overcooked --layout random0 --k 10 --N 1000000
 ################# Train MEP:#######################
 1. train population for the ego agent:
@@ -25,6 +29,7 @@ to
 "/home/tom.danino/scevel/ZSC-Eval/zsceval/scripts/"
 and run:
 python extract_pop_S1_models.py random0 overcooked
+
 
 
 
